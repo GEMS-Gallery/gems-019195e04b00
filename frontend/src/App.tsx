@@ -79,9 +79,6 @@ const App: React.FC = () => {
                   maxWidth: '70%',
                   borderRadius: '20px',
                   backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
-                  backgroundImage: message.isUser
-                    ? 'linear-gradient(to bottom right, #e8eaf6, #c5cae9)'
-                    : 'linear-gradient(to bottom right, #fce4ec, #f8bbd0)',
                   color: 'text.primary',
                   boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                 }}
