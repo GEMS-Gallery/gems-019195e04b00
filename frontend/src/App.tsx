@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Box, TextField, Button, Typography, Paper, CircularProgress, Container } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import SmartToyIcon from '@mui/icons-material/SmartToy';
+import PersonIcon from '@mui/icons-material/Person';
 import { backend } from 'declarations/backend';
 
 interface Message {
@@ -61,22 +63,30 @@ const App: React.FC = () => {
       <Container maxWidth="md" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2, display: 'flex', flexDirection: 'column' }}>
           {messages.map((message, index) => (
-            <Paper
+            <Box
               key={index}
-              elevation={1}
               sx={{
-                p: 2,
+                display: 'flex',
+                justifyContent: message.isUser ? 'flex-end' : 'flex-start',
                 mb: 2,
-                maxWidth: '70%',
-                alignSelf: message.isUser ? 'flex-end' : 'flex-start',
-                backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
-                color: 'text.primary',
-                border: '1px solid',
-                borderColor: 'secondary.main',
               }}
             >
-              <Typography>{message.text}</Typography>
-            </Paper>
+              {!message.isUser && <SmartToyIcon sx={{ mr: 1, alignSelf: 'flex-end' }} />}
+              <Paper
+                elevation={1}
+                sx={{
+                  p: 2,
+                  maxWidth: '70%',
+                  backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
+                  color: 'text.primary',
+                  border: '1px solid',
+                  borderColor: 'secondary.main',
+                }}
+              >
+                <Typography>{message.text}</Typography>
+              </Paper>
+              {message.isUser && <PersonIcon sx={{ ml: 1, alignSelf: 'flex-end' }} />}
+            </Box>
           ))}
           {isLoading && (
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
