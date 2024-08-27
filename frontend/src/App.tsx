@@ -55,7 +55,7 @@ const App: React.FC = () => {
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
-      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'text.primary' }}>
+      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'background.default' }}>
         <Typography variant="h6">GEMS AI Chatbot</Typography>
       </Box>
       <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
@@ -68,8 +68,10 @@ const App: React.FC = () => {
               mb: 2,
               maxWidth: '70%',
               ml: message.isUser ? 'auto' : 0,
-              backgroundColor: message.isUser ? 'primary.dark' : 'secondary.dark',
+              backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
               color: 'text.primary',
+              border: '1px solid',
+              borderColor: 'secondary.main',
             }}
           >
             <Typography>{message.text}</Typography>
@@ -93,10 +95,18 @@ const App: React.FC = () => {
           InputProps={{
             endAdornment: (
               <Button
+                variant="contained"
                 color="primary"
                 onClick={handleSend}
                 disabled={isLoading}
                 startIcon={<SendIcon />}
+                sx={{
+                  bgcolor: 'primary.main',
+                  color: 'background.default',
+                  '&:hover': {
+                    bgcolor: 'secondary.main',
+                  },
+                }}
               >
                 Send
               </Button>
@@ -106,10 +116,10 @@ const App: React.FC = () => {
           sx={{
             '& .MuiOutlinedInput-root': {
               '& fieldset': {
-                borderColor: 'text.secondary',
+                borderColor: 'secondary.main',
               },
               '&:hover fieldset': {
-                borderColor: 'text.primary',
+                borderColor: 'primary.main',
               },
               '&.Mui-focused fieldset': {
                 borderColor: 'primary.main',
