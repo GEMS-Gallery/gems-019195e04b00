@@ -8,21 +8,28 @@ import './index.css';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#000000',
-      light: '#f0f0f0',
+      main: '#3f51b5',
+      light: '#e8eaf6',
     },
     secondary: {
-      main: '#757575',
-      light: '#f5f5f5',
+      main: '#f50057',
+      light: '#fce4ec',
     },
     background: {
-      default: '#ffffff',
+      default: '#f5f5f5',
       paper: '#ffffff',
     },
     text: {
-      primary: '#000000',
+      primary: '#212121',
       secondary: '#757575',
     },
+  },
+  typography: {
+    fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
+    fontSize: 14,
+    fontWeightLight: 300,
+    fontWeightRegular: 400,
+    fontWeightMedium: 500,
   },
 });
 

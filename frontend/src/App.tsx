@@ -57,7 +57,7 @@ const App: React.FC = () => {
 
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
-      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'background.default' }}>
+      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'background.paper' }}>
         <Typography variant="h6">GEMS AI Chatbot</Typography>
       </Box>
       <Container maxWidth="md" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
@@ -71,21 +71,24 @@ const App: React.FC = () => {
                 mb: 2,
               }}
             >
-              {!message.isUser && <SmartToyIcon sx={{ mr: 1, alignSelf: 'flex-end' }} />}
+              {!message.isUser && <SmartToyIcon sx={{ mr: 1, alignSelf: 'flex-end', color: 'primary.main' }} />}
               <Paper
-                elevation={1}
+                elevation={2}
                 sx={{
                   p: 2,
                   maxWidth: '70%',
+                  borderRadius: '20px',
                   backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
+                  backgroundImage: message.isUser
+                    ? 'linear-gradient(to bottom right, #e8eaf6, #c5cae9)'
+                    : 'linear-gradient(to bottom right, #fce4ec, #f8bbd0)',
                   color: 'text.primary',
-                  border: '1px solid',
-                  borderColor: 'secondary.main',
+                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
                 }}
               >
-                <Typography>{message.text}</Typography>
+                <Typography variant="body1" sx={{ fontWeight: 400 }}>{message.text}</Typography>
               </Paper>
-              {message.isUser && <PersonIcon sx={{ ml: 1, alignSelf: 'flex-end' }} />}
+              {message.isUser && <PersonIcon sx={{ ml: 1, alignSelf: 'flex-end', color: 'primary.main' }} />}
             </Box>
           ))}
           {isLoading && (
@@ -113,9 +116,9 @@ const App: React.FC = () => {
                   startIcon={<SendIcon />}
                   sx={{
                     bgcolor: 'primary.main',
-                    color: 'background.default',
+                    color: 'background.paper',
                     '&:hover': {
-                      bgcolor: 'secondary.main',
+                      bgcolor: 'primary.dark',
                     },
                   }}
                 >
@@ -127,7 +130,7 @@ const App: React.FC = () => {
             sx={{
               '& .MuiOutlinedInput-root': {
                 '& fieldset': {
-                  borderColor: 'secondary.main',
+                  borderColor: 'primary.light',
                 },
                 '&:hover fieldset': {
                   borderColor: 'primary.main',
