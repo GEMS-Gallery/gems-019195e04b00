@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper, CircularProgress, Container } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, CircularProgress, Container, Link } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PersonIcon from '@mui/icons-material/Person';
@@ -8,6 +8,11 @@ import { backend } from 'declarations/backend';
 interface Message {
   text: string;
   isUser: boolean;
+  searchResult?: {
+    title: string;
+    snippet: string;
+    pageId: number;
+  };
 }
 
 const App: React.FC = () => {
@@ -36,17 +41,41 @@ const App: React.FC = () => {
     fetchHistory();
   }, []);
 
+  const fetchWikipediaSearch = async (query: string) => {
+    const url = `https://en.wikipedia.org/w/api.php?action=query&list=search&prop=info&inprop=url&utf8=&format=json&origin=*&srlimit=1&srsearch=${encodeURIComponent(query)}`;
+    try {
+      const response = await fetch(url);
+      const data = await response.json();
+      if (data.query && data.query.search && data.query.search.length > 0) {
+        const result = data.query.search[0];
+        return {
+          title: result.title,
+          snippet: result.snippet,
+          pageId: result.pageid,
+        };
+      }
+    } catch (error) {
+      console.error('Error fetching Wikipedia search:', error);
+    }
+    return null;
+  };
+
   const handleSend = async () => {
     if (input.trim() === '') return;
 
-    const userMessage = { text: input, isUser: true };
+    const userMessage: Message = { text: input, isUser: true };
     setMessages(prev => [...prev, userMessage]);
     setInput('');
     setIsLoading(true);
 
     try {
+      const searchResult = await fetchWikipediaSearch(input);
       const response = await backend.sendMessage(input);
-      const aiMessage = { text: response, isUser: false };
+      const aiMessage: Message = { 
+        text: response, 
+        isUser: false,
+        searchResult: searchResult || undefined
+      };
       setMessages(prev => [...prev, aiMessage]);
     } catch (error) {
       console.error('Error sending message:', error);
@@ -67,25 +96,54 @@ const App: React.FC = () => {
               key={index}
               sx={{
                 display: 'flex',
-                justifyContent: message.isUser ? 'flex-end' : 'flex-start',
+                flexDirection: 'column',
+                alignItems: message.isUser ? 'flex-end' : 'flex-start',
                 mb: 2,
               }}
             >
-              {!message.isUser && <SmartToyIcon sx={{ mr: 1, alignSelf: 'flex-end', color: 'primary.main' }} />}
-              <Paper
-                elevation={1}
-                sx={{
-                  p: 2,
-                  maxWidth: '70%',
-                  backgroundColor: message.isUser ? 'background.paper' : 'primary.light',
-                  color: 'text.primary',
-                  border: '1px solid',
-                  borderColor: 'primary.light',
-                }}
-              >
-                <Typography variant="body1">{message.text}</Typography>
-              </Paper>
-              {message.isUser && <PersonIcon sx={{ ml: 1, alignSelf: 'flex-end', color: 'primary.main' }} />}
+              <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                {!message.isUser && <SmartToyIcon sx={{ mr: 1, mb: 1, color: 'primary.main' }} />}
+                <Paper
+                  elevation={1}
+                  sx={{
+                    p: 2,
+                    maxWidth: '70%',
+                    backgroundColor: message.isUser ? 'background.paper' : 'primary.light',
+                    color: 'text.primary',
+                    border: '1px solid',
+                    borderColor: 'primary.light',
+                  }}
+                >
+                  <Typography variant="body1">{message.text}</Typography>
+                </Paper>
+                {message.isUser && <PersonIcon sx={{ ml: 1, mb: 1, color: 'primary.main' }} />}
+              </Box>
+              {message.searchResult && (
+                <Paper
+                  elevation={1}
+                  sx={{
+                    p: 2,
+                    mt: 1,
+                    maxWidth: '70%',
+                    backgroundColor: 'background.paper',
+                    border: '1px solid',
+                    borderColor: 'primary.light',
+                  }}
+                >
+                  <Typography variant="subtitle2">Search Result:</Typography>
+                  <Typography variant="body2">
+                    <strong>{message.searchResult.title}</strong>
+                  </Typography>
+                  <Typography variant="body2" dangerouslySetInnerHTML={{ __html: message.searchResult.snippet }} />
+                  <Link 
+                    href={`https://en.wikipedia.org/?curid=${message.searchResult.pageId}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Read more
+                  </Link>
+                </Paper>
+              )}
             </Box>
           ))}
           {isLoading && (
