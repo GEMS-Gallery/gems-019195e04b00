@@ -73,17 +73,17 @@ const App: React.FC = () => {
             >
               {!message.isUser && <SmartToyIcon sx={{ mr: 1, alignSelf: 'flex-end', color: 'primary.main' }} />}
               <Paper
-                elevation={2}
+                elevation={1}
                 sx={{
                   p: 2,
                   maxWidth: '70%',
-                  borderRadius: '20px',
-                  backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
+                  backgroundColor: message.isUser ? 'background.paper' : 'primary.light',
                   color: 'text.primary',
-                  boxShadow: '0 1px 2px 0 rgba(0, 0, 0, 0.05)',
+                  border: '1px solid',
+                  borderColor: 'primary.light',
                 }}
               >
-                <Typography variant="body1" sx={{ fontWeight: 400 }}>{message.text}</Typography>
+                <Typography variant="body1">{message.text}</Typography>
               </Paper>
               {message.isUser && <PersonIcon sx={{ ml: 1, alignSelf: 'flex-end', color: 'primary.main' }} />}
             </Box>
@@ -95,7 +95,7 @@ const App: React.FC = () => {
           )}
           <div ref={messagesEndRef} />
         </Box>
-        <Box sx={{ p: 2, backgroundColor: 'background.paper' }}>
+        <Box sx={{ p: 2, backgroundColor: 'background.default' }}>
           <TextField
             fullWidth
             variant="outlined"

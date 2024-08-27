@@ -8,16 +8,16 @@ import './index.css';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#3f51b5',
-      light: '#e8eaf6',
+      main: '#424242',
+      light: '#e0e0e0',
     },
     secondary: {
-      main: '#f50057',
-      light: '#fce4ec',
+      main: '#9e9e9e',
+      light: '#f5f5f5',
     },
     background: {
-      default: '#f5f5f5',
-      paper: '#ffffff',
+      default: '#ffffff',
+      paper: '#f5f5f5',
     },
     text: {
       primary: '#212121',
@@ -30,6 +30,9 @@ const theme = createTheme({
     fontWeightLight: 300,
     fontWeightRegular: 400,
     fontWeightMedium: 500,
+  },
+  shape: {
+    borderRadius: 2,
   },
 });
 
