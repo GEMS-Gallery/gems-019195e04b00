@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper, CircularProgress, Container, Link, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, CircularProgress, Container, Link, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle, Snackbar } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import DeleteIcon from '@mui/icons-material/Delete';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
@@ -21,6 +21,8 @@ const App: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [openDialog, setOpenDialog] = useState(false);
+  const [openSnackbar, setOpenSnackbar] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -64,16 +66,24 @@ const App: React.FC = () => {
 
   const fetchAIResponse = async (prompt: string) => {
     const API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill";
-    const response = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": "Bearer YOUR_HUGGING_FACE_API_KEY"
-      },
-      body: JSON.stringify({ inputs: prompt }),
-    });
-    const result = await response.json();
-    return result[0].generated_text;
+    try {
+      const response = await fetch(API_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer YOUR_HUGGING_FACE_API_KEY"
+        },
+        body: JSON.stringify({ inputs: prompt }),
+      });
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const result = await response.json();
+      return result[0].generated_text;
+    } catch (error) {
+      console.error('Error fetching AI response:', error);
+      return null;
+    }
   };
 
   const handleSend = async () => {
@@ -86,7 +96,12 @@ const App: React.FC = () => {
 
     try {
       const searchResult = await fetchWikipediaSearch(input);
-      const aiResponse = await fetchAIResponse(input);
+      let aiResponse = await fetchAIResponse(input);
+      if (!aiResponse) {
+        aiResponse = await backend.generateFallbackResponse(input);
+        setSnackbarMessage('Using fallback response due to API unavailability.');
+        setOpenSnackbar(true);
+      }
       const aiMessage: Message = { 
         text: aiResponse, 
         isUser: false,
@@ -96,6 +111,8 @@ const App: React.FC = () => {
       await backend.sendMessage(input, aiResponse);
     } catch (error) {
       console.error('Error sending message:', error);
+      setSnackbarMessage('An error occurred while processing your request.');
+      setOpenSnackbar(true);
     } finally {
       setIsLoading(false);
     }
@@ -113,6 +130,8 @@ const App: React.FC = () => {
       setMessages([]);
     } catch (error) {
       console.error('Error clearing conversation history:', error);
+      setSnackbarMessage('An error occurred while clearing the history.');
+      setOpenSnackbar(true);
     } finally {
       setIsLoading(false);
     }
@@ -261,6 +280,12 @@ const App: React.FC = () => {
           </Button>
         </DialogActions>
       </Dialog>
+      <Snackbar
+        open={openSnackbar}
+        autoHideDuration={6000}
+        onClose={() => setOpenSnackbar(false)}
+        message={snackbarMessage}
+      />
     </Box>
   );
 };

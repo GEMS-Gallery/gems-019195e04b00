@@ -4,6 +4,7 @@ import type { IDL } from '@dfinity/candid';
 
 export interface _SERVICE {
   'clearConversationHistory' : ActorMethod<[], undefined>,
+  'generateFallbackResponse' : ActorMethod<[string], string>,
   'getConversationHistory' : ActorMethod<[], Array<[string, string]>>,
   'sendMessage' : ActorMethod<[string, string], undefined>,
 }
