@@ -1,0 +1,7 @@
+service : {
+  getConversationHistory: () -> (vec record {
+                                       text;
+                                       text;
+                                     }) query;
+  sendMessage: (text) -> (text);
+}
