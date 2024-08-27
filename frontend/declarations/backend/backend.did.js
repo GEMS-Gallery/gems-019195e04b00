@@ -1,7 +1,7 @@
 export const idlFactory = ({ IDL }) => {
   return IDL.Service({
     'clearConversationHistory' : IDL.Func([], [], []),
-    'generateFallbackResponse' : IDL.Func([IDL.Text], [IDL.Text], []),
+    'generateResponse' : IDL.Func([IDL.Text], [IDL.Text], []),
     'getConversationHistory' : IDL.Func(
         [],
         [IDL.Vec(IDL.Tuple(IDL.Text, IDL.Text))],

@@ -1,6 +1,6 @@
 service : {
   clearConversationHistory: () -> ();
-  generateFallbackResponse: (text) -> (text);
+  generateResponse: (text) -> (text);
   getConversationHistory: () -> (vec record {
                                        text;
                                        text;

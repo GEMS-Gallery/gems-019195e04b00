@@ -20,13 +20,13 @@ actor GEMS {
     messageCounter := 0;
   };
 
-  public func generateFallbackResponse(message : Text) : async Text {
+  public func generateResponse(message : Text) : async Text {
     if (Text.contains(Text.toLowercase(message), #text "hello")) {
       return "Hello! How can I assist you today?";
     } else if (Text.contains(Text.toLowercase(message), #text "bye")) {
       return "Goodbye! Have a great day!";
     } else {
-      return "I'm sorry, I couldn't process your request at the moment. Could you please try again later or rephrase your question?";
+      return "I'm here to help. Could you please provide more details or ask a specific question?";
     };
   };
 }

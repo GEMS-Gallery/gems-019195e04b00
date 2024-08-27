@@ -64,28 +64,6 @@ const App: React.FC = () => {
     return null;
   };
 
-  const fetchAIResponse = async (prompt: string) => {
-    const API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill";
-    try {
-      const response = await fetch(API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Authorization": "Bearer YOUR_HUGGING_FACE_API_KEY"
-        },
-        body: JSON.stringify({ inputs: prompt }),
-      });
-      if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`);
-      }
-      const result = await response.json();
-      return result[0].generated_text;
-    } catch (error) {
-      console.error('Error fetching AI response:', error);
-      return null;
-    }
-  };
-
   const handleSend = async () => {
     if (input.trim() === '') return;
 
@@ -96,12 +74,7 @@ const App: React.FC = () => {
 
     try {
       const searchResult = await fetchWikipediaSearch(input);
-      let aiResponse = await fetchAIResponse(input);
-      if (!aiResponse) {
-        aiResponse = await backend.generateFallbackResponse(input);
-        setSnackbarMessage('Using fallback response due to API unavailability.');
-        setOpenSnackbar(true);
-      }
+      const aiResponse = await backend.generateResponse(input);
       const aiMessage: Message = { 
         text: aiResponse, 
         isUser: false,
