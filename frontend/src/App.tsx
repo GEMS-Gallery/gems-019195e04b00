@@ -62,6 +62,20 @@ const App: React.FC = () => {
     return null;
   };
 
+  const fetchAIResponse = async (prompt: string) => {
+    const API_URL = "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill";
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer YOUR_HUGGING_FACE_API_KEY"
+      },
+      body: JSON.stringify({ inputs: prompt }),
+    });
+    const result = await response.json();
+    return result[0].generated_text;
+  };
+
   const handleSend = async () => {
     if (input.trim() === '') return;
 
@@ -72,13 +86,14 @@ const App: React.FC = () => {
 
     try {
       const searchResult = await fetchWikipediaSearch(input);
-      const response = await backend.sendMessage(input);
+      const aiResponse = await fetchAIResponse(input);
       const aiMessage: Message = { 
-        text: response, 
+        text: aiResponse, 
         isUser: false,
         searchResult: searchResult || undefined
       };
       setMessages(prev => [...prev, aiMessage]);
+      await backend.sendMessage(input, aiResponse);
     } catch (error) {
       console.error('Error sending message:', error);
     } finally {

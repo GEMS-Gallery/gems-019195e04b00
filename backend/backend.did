@@ -4,5 +4,5 @@ service : {
                                        text;
                                        text;
                                      }) query;
-  sendMessage: (text) -> (text);
+  sendMessage: (text, text) -> ();
 }
