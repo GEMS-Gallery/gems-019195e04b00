@@ -18,13 +18,12 @@ actor GEMS {
   };
 
   private func generateResponse(message : Text) : Text {
-    // Simple keyword-based response system for MVP
     if (Text.contains(Text.toLowercase(message), #text "hello")) {
       return "Hello! How can I assist you today?";
     } else if (Text.contains(Text.toLowercase(message), #text "bye")) {
       return "Goodbye! Have a great day!";
     } else {
-      return "I'm sorry, I don't understand. Could you please rephrase your question?";
+      return "I've searched for information related to your query. Please check the search result below for more details. If you need more specific information, feel free to ask another question.";
     };
   };
 }
