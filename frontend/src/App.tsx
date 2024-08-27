@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper, CircularProgress } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, CircularProgress, Container } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { backend } from 'declarations/backend';
 
@@ -58,76 +58,78 @@ const App: React.FC = () => {
       <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'background.default' }}>
         <Typography variant="h6">GEMS AI Chatbot</Typography>
       </Box>
-      <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
-        {messages.map((message, index) => (
-          <Paper
-            key={index}
-            elevation={1}
-            sx={{
-              p: 2,
-              mb: 2,
-              maxWidth: '70%',
-              ml: message.isUser ? 'auto' : 0,
-              backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
-              color: 'text.primary',
-              border: '1px solid',
-              borderColor: 'secondary.main',
-            }}
-          >
-            <Typography>{message.text}</Typography>
-          </Paper>
-        ))}
-        {isLoading && (
-          <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-            <CircularProgress />
-          </Box>
-        )}
-        <div ref={messagesEndRef} />
-      </Box>
-      <Box sx={{ p: 2, backgroundColor: 'background.paper' }}>
-        <TextField
-          fullWidth
-          variant="outlined"
-          placeholder="Type your message..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSend()}
-          InputProps={{
-            endAdornment: (
-              <Button
-                variant="contained"
-                color="primary"
-                onClick={handleSend}
-                disabled={isLoading}
-                startIcon={<SendIcon />}
-                sx={{
-                  bgcolor: 'primary.main',
-                  color: 'background.default',
-                  '&:hover': {
-                    bgcolor: 'secondary.main',
-                  },
-                }}
-              >
-                Send
-              </Button>
-            ),
-            style: { color: 'text.primary' },
-          }}
-          sx={{
-            '& .MuiOutlinedInput-root': {
-              '& fieldset': {
+      <Container maxWidth="md" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2, display: 'flex', flexDirection: 'column' }}>
+          {messages.map((message, index) => (
+            <Paper
+              key={index}
+              elevation={1}
+              sx={{
+                p: 2,
+                mb: 2,
+                maxWidth: '70%',
+                alignSelf: message.isUser ? 'flex-end' : 'flex-start',
+                backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
+                color: 'text.primary',
+                border: '1px solid',
                 borderColor: 'secondary.main',
+              }}
+            >
+              <Typography>{message.text}</Typography>
+            </Paper>
+          ))}
+          {isLoading && (
+            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+              <CircularProgress />
+            </Box>
+          )}
+          <div ref={messagesEndRef} />
+        </Box>
+        <Box sx={{ p: 2, backgroundColor: 'background.paper' }}>
+          <TextField
+            fullWidth
+            variant="outlined"
+            placeholder="Type your message..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+            onKeyPress={(e) => e.key === 'Enter' && handleSend()}
+            InputProps={{
+              endAdornment: (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={handleSend}
+                  disabled={isLoading}
+                  startIcon={<SendIcon />}
+                  sx={{
+                    bgcolor: 'primary.main',
+                    color: 'background.default',
+                    '&:hover': {
+                      bgcolor: 'secondary.main',
+                    },
+                  }}
+                >
+                  Send
+                </Button>
+              ),
+              style: { color: 'text.primary' },
+            }}
+            sx={{
+              '& .MuiOutlinedInput-root': {
+                '& fieldset': {
+                  borderColor: 'secondary.main',
+                },
+                '&:hover fieldset': {
+                  borderColor: 'primary.main',
+                },
+                '&.Mui-focused fieldset': {
+                  borderColor: 'primary.main',
+                },
               },
-              '&:hover fieldset': {
-                borderColor: 'primary.main',
-              },
-              '&.Mui-focused fieldset': {
-                borderColor: 'primary.main',
-              },
-            },
-          }}
-        />
-      </Box>
+            }}
+          />
+        </Box>
+      </Container>
     </Box>
   );
 };
