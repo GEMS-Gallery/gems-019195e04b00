@@ -17,6 +17,11 @@ actor GEMS {
     conversationHistory
   };
 
+  public func clearConversationHistory() : async () {
+    conversationHistory := [];
+    messageCounter := 0;
+  };
+
   private func generateResponse(message : Text) : Text {
     if (Text.contains(Text.toLowercase(message), #text "hello")) {
       return "Hello! How can I assist you today?";

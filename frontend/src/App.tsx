@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Box, TextField, Button, Typography, Paper, CircularProgress, Container, Link } from '@mui/material';
+import { Box, TextField, Button, Typography, Paper, CircularProgress, Container, Link, Dialog, DialogActions, DialogContent, DialogContentText, DialogTitle } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import DeleteIcon from '@mui/icons-material/Delete';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 import PersonIcon from '@mui/icons-material/Person';
 import { backend } from 'declarations/backend';
@@ -19,6 +20,7 @@ const App: React.FC = () => {
   const [input, setInput] = useState('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [openDialog, setOpenDialog] = useState(false);
   const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
   const scrollToBottom = () => {
@@ -84,10 +86,35 @@ const App: React.FC = () => {
     }
   };
 
+  const handleClearHistory = async () => {
+    setOpenDialog(true);
+  };
+
+  const confirmClearHistory = async () => {
+    setOpenDialog(false);
+    setIsLoading(true);
+    try {
+      await backend.clearConversationHistory();
+      setMessages([]);
+    } catch (error) {
+      console.error('Error clearing conversation history:', error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
-      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'background.paper' }}>
+      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'background.paper', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <Typography variant="h6">GEMS AI Chatbot</Typography>
+        <Button
+          variant="contained"
+          color="secondary"
+          startIcon={<DeleteIcon />}
+          onClick={handleClearHistory}
+        >
+          Clear History
+        </Button>
       </Box>
       <Container maxWidth="md" sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>
         <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2, display: 'flex', flexDirection: 'column' }}>
@@ -198,6 +225,27 @@ const App: React.FC = () => {
           />
         </Box>
       </Container>
+      <Dialog
+        open={openDialog}
+        onClose={() => setOpenDialog(false)}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogTitle id="alert-dialog-title">Clear Chat History</DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            Are you sure you want to clear the entire chat history? This action cannot be undone.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenDialog(false)} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={confirmClearHistory} color="primary" autoFocus>
+            Confirm
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
