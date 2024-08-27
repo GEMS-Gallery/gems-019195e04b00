@@ -54,8 +54,8 @@ const App: React.FC = () => {
   };
 
   return (
-    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
-      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'white' }}>
+    <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column', bgcolor: 'background.default' }}>
+      <Box sx={{ p: 2, backgroundColor: 'primary.main', color: 'text.primary' }}>
         <Typography variant="h6">GEMS AI Chatbot</Typography>
       </Box>
       <Box sx={{ flexGrow: 1, overflow: 'auto', p: 2 }}>
@@ -68,7 +68,8 @@ const App: React.FC = () => {
               mb: 2,
               maxWidth: '70%',
               ml: message.isUser ? 'auto' : 0,
-              backgroundColor: message.isUser ? 'primary.light' : 'secondary.light',
+              backgroundColor: message.isUser ? 'primary.dark' : 'secondary.dark',
+              color: 'text.primary',
             }}
           >
             <Typography>{message.text}</Typography>
@@ -100,6 +101,20 @@ const App: React.FC = () => {
                 Send
               </Button>
             ),
+            style: { color: 'text.primary' },
+          }}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              '& fieldset': {
+                borderColor: 'text.secondary',
+              },
+              '&:hover fieldset': {
+                borderColor: 'text.primary',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: 'primary.main',
+              },
+            },
           }}
         />
       </Box>

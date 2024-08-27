@@ -8,13 +8,18 @@ import './index.css';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#4a90e2',
+      main: '#424242',
     },
     secondary: {
-      main: '#34c759',
+      main: '#757575',
     },
     background: {
-      default: '#f5f5f5',
+      default: '#212121',
+      paper: '#303030',
+    },
+    text: {
+      primary: '#ffffff',
+      secondary: '#bdbdbd',
     },
   },
 });
